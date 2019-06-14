@@ -24,7 +24,6 @@ FriendForm.propTypes = {
     newFriend: PropTypes.string.isRequired,
     newFriendAge: PropTypes.string.isRequired,
     newFriendEmail: PropTypes.string.isRequired
-  };
-  
+};  
 
 export default FriendForm;

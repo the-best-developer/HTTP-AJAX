@@ -25,13 +25,13 @@ class App extends React.Component {
   // Update this.state.friendsList with friends list pulled from our server
   updateFriendsState() {
     axios
-      .get('http://localhost:5000/friends')
-      .then(res => {
-        this.setState(() => ({friendsList: res.data}));
-      })
-      .catch(error => {
-        console.error("err: " + error);
-      });
+    .get('http://localhost:5000/friends')
+    .then(res => {
+      this.setState(() => ({friendsList: res.data}));
+    })
+    .catch(error => {
+      console.error("err: " + error);
+    });
   }
 
   // Once mounted, pull friends list
@@ -41,11 +41,14 @@ class App extends React.Component {
 
   // Handle updating our state with the corresponding key. (name, age, email)
   textChangeHandler (event, target) {
-      this.setState({[target]: event.target.value});
+    this.setState({[target]: event.target.value});
   }
 
   // Our POST handler to add our new friend to the friends list
   submitFriendHandler (event) {
+
+    event.preventDefault();
+
     axios
     .post(' http://localhost:5000/friends', (
       {
@@ -55,13 +58,12 @@ class App extends React.Component {
       }
     ))
     .then(_ => {
+      // Update our friends list state again to show our results
       this.updateFriendsState();
     })
     .catch(err => {
       console.log(err);
     });
-
-    event.preventDefault();
   };
 
   editFriendHandler (event) {
@@ -71,15 +73,18 @@ class App extends React.Component {
 
     //TODO: This should probably check for dupes
     this.state.friendsList.forEach(f => {
+      //Find the matching friend in the friends list using the email state
       if(f.email === this.state.newFriendEmail) {
         thisFriend = f;
       }
     })
 
+    // If none are found, stop here
     if(!(thisFriend)) {
       return;
     }
   
+    // Select our friend using the id in our thisFriend variable, update using the newFriendAge and newFriend state variables
     axios
     .put(`http://localhost:5000/friends/${thisFriend.id}`, (
       {
@@ -89,18 +94,17 @@ class App extends React.Component {
     ))
     .then(res=> {
       this.updateFriendsState();
-      console.log(res)
     })
     .catch(err => {
       console.log(err);
     });
   };
 
+  // Delete selected ID
   deleteFriendHandler(id) {
     axios     
     .delete(`http://localhost:5000/friends/${id}`)
     .then(res => {
-      console.log(res)
       this.updateFriendsState();
     })
     .catch(err => {
@@ -116,7 +120,7 @@ class App extends React.Component {
          friendsList={this.state.friendsList}
          deleteFriendHandler={this.deleteFriendHandler}
         />
-        {/* Add friend form */}
+        {/* Add/Edit friend form */}
         <FriendForm 
           newFriend={this.state.newFriend}
           newFriendAge={this.state.newFriendAge}

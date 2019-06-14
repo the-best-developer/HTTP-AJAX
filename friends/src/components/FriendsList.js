@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const FriendsList = props => {
 
@@ -22,7 +23,11 @@ const FriendsList = props => {
     </div>
   );
 };
-  
+
+FriendsList.propTypes = {
+  friendsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  deleteFriendHandler: PropTypes.func.isRequired
+};
 
 export default FriendsList;
 
